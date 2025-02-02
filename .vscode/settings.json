@@ -1,0 +1,7 @@
+{
+  "editor.fontSize": 13,
+  "files.autoSave": "onFocusChange",
+  "editor.tabSize": 2,
+  "editor.fontFamily": "'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace",
+  "terminal.integrated.fontSize": 13
+}
