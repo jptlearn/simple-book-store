@@ -1,5 +1,7 @@
 import bookModel from "../models/book.model.js";
+import textConstant from "../constants/text.constant.js";
 import { Op } from "sequelize";
+import urlConstant from "../constants/url.constant.js";
 
 const addBook = async (req, res) => {
   try {
@@ -25,7 +27,7 @@ const getBookByID = async (req, res) => {
       const book = await bookModel.findByPk(id);
       res.json({ success: true, message: book });
     } else {
-      res.json({ success: false, message: "Id is required." });
+      res.json({ success: false, message: textConstant.BOOK_ID_PROVIDED });
     }
   } catch (error) {
     console.log("error while fetching book: ", error);
@@ -51,7 +53,7 @@ const updateBook = async (req, res) => {
     );
     res.json({ success: true, message: "book updated successfully!!" });
   } else {
-    res.json({ success: false, message: "Book Id not provided." });
+    res.json({ success: false, message: textConstant.BOOK_ID_PROVIDED });
   }
 };
 
@@ -59,7 +61,7 @@ const deleteBook = async (req, res) => {
   const { id } = req.params;
 
   if (!id) {
-    return res.json({ message: "Book Id not provided." });
+    return res.json({ message: textConstant.BOOK_ID_PROVIDED });
   }
   const data = await bookModel.destroy({
     where: {
@@ -112,7 +114,7 @@ const getBooks = async (req, res) => {
     // console.log(data);
     for (let d of data) {
       // console.log(d.dataValues);
-      d.image = "http://localhost:8000/" + d.image;
+      d.image = urlConstant.IMG_PATH_URL + d.image;
     }
     res.json(data);
   } catch (error) {
