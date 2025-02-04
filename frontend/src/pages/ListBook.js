@@ -9,8 +9,7 @@ const ListBook = () => {
   useEffect(() => {
     async function getBooks() {
       const response = await api.get("/book");
-      console.log(response.data);
-      setBookList(response.data);
+      setBookList(response.data.data);
     }
     getBooks();
   }, []);
@@ -39,29 +38,29 @@ const ListBook = () => {
       <ToastContainer />
       {bookList.length > 0
         ? bookList.map((book, index) => {
-            return (
-              <div
-                key={index}
-                style={{
-                  display: "flex",
-                  boxShadow: "0px 0px 5px #ccc",
-                  padding: "10px",
-                  margin: "10px",
-                  width: "45%",
-                  textAlign: "start",
-                  justifyContent: "space-between",
-                  marginTop: "30px",
-                }}
-              >
-                {book.name}
-                <FaTrashAlt
-                  color="red"
-                  style={{ color: "red", cursor: "pointer" }}
-                  onClick={() => deleteBook(book.id, index)}
-                />
-              </div>
-            );
-          })
+          return (
+            <div
+              key={index}
+              style={{
+                display: "flex",
+                boxShadow: "0px 0px 5px #ccc",
+                padding: "10px",
+                margin: "10px",
+                width: "45%",
+                textAlign: "start",
+                justifyContent: "space-between",
+                marginTop: "30px",
+              }}
+            >
+              {book.name}
+              <FaTrashAlt
+                color="red"
+                style={{ color: "red", cursor: "pointer" }}
+                onClick={() => deleteBook(book.id, index)}
+              />
+            </div>
+          );
+        })
         : "No Books Found"}
     </center>
   );

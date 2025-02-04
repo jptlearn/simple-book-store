@@ -3,9 +3,19 @@ import cors from "cors";
 import "dotenv/config";
 import sequelize from "./models/index.js";
 import bookRoutes from "./routes/book.route.js";
+import { limiter, securityMiddleware } from "./middlewares/security.middleware.js";
 
 const app = express();
-app.use(cors());
+
+app.use(limiter);
+securityMiddleware.forEach(middleware => app.use(middleware));
+
+app.use(cors({
+  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

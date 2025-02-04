@@ -7,18 +7,14 @@ const HomePage = () => {
   const [bookList, setBookList] = useState([]); // Initialize with empty array
   const [tempBookList, setTempBookList] = useState([]);
   const [searchText, setSearchText] = useState("");
+
   useEffect(() => {
     async function fetchBook() {
       try {
         const response = await api.get("/book");
-        // console.log(response.data);
-        // Check if response.data is array, if not get its values
-        const books = Array.isArray(response.data)
-          ? response.data
-          : Object.values(response.data);
-        // console.log(books);
-        setBookList(books);
-        setTempBookList(response.data);
+
+        setBookList(response.data.data || []);
+        setTempBookList(response.data.data || []);
       } catch (error) {
         console.error("Error fetching books:", error);
         setBookList([]);
@@ -31,8 +27,7 @@ const HomePage = () => {
     async function searchBooks() {
       const response = await api.get(`/book/search/all?q=${searchText}`);
       if (response.data) {
-        // console.log(response.data);
-        setBookList(response.data);
+        setBookList(response.data.data || []);
       }
     }
     if (searchText) searchBooks();

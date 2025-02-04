@@ -47,36 +47,38 @@ const getBookByID = async (req, res) => {
   try {
     if (id) {
       const book = await bookModel.findByPk(id);
+      if (!book) {
+        return res.status(404).json({ success: false, message: "Book not found" });
+      }
       res.json({ success: true, message: book });
     } else {
-      res.json({ success: false, message: textConstant.BOOK_ID_PROVIDED });
+      res.status(400).json({ success: false, message: textConstant.BOOK_ID_PROVIDED });
     }
   } catch (error) {
-    console.log("error while fetching book: ", error);
+    res.status(500).json({ success: false, message: "Error while fetching book", error: error.message });
   }
 };
 
 const updateBook = async (req, res) => {
   const { id } = req.params;
-
-  if (id) {
+  try {
+    if (!id) {
+      return res.status(400).json({ success: false, message: textConstant.BOOK_ID_PROVIDED });
+    }
     const book = await bookModel.findByPk(id);
     if (!book) {
-      return res.json({ message: "Book not found with this id." });
+      return res.status(404).json({ success: false, message: "Book not found with this id." });
     }
     const { name, author, description, genre } = req.body;
     await bookModel.update(
       { name, author, description, genre },
-      {
-        where: {
-          id,
-        },
-      }
+      { where: { id } }
     );
-    res.json({ success: true, message: "book updated successfully!!" });
-  } else {
-    res.json({ success: false, message: textConstant.BOOK_ID_PROVIDED });
+    res.status(200).json({ success: true, message: "Book updated successfully!" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error updating book", error: error.message });
   }
+
 };
 
 const deleteBook = async (req, res) => {
@@ -91,7 +93,7 @@ const deleteBook = async (req, res) => {
     },
   });
   if (data) {
-    res.json({ success: true, message: "Book deleted.", data: data });
+    res.status(200).json({ success: true, message: "Book deleted.", data: data });
   } else {
     res.json({
       success: false,
@@ -119,13 +121,13 @@ const searchBook = async (req, res) => {
       },
       raw: true,
     });
-    console.log(data);
+    // console.log(data);
     for (let d of data) {
       d.image = urlConstant.IMG_PATH_URL + d.image;
     }
-    res.json(data);
+    res.status(200).json({ success: true, message: "Books fetched successfully", data: data ? data : "No data found" });
   } catch (error) {
-    res.send("Error while searching book");
+    res.status(500).json({ success: false, message: "Error while searching book" });
   }
 };
 
@@ -142,9 +144,9 @@ const getBooks = async (req, res) => {
       // console.log(d.dataValues);
       d.image = urlConstant.IMG_PATH_URL + d.image;
     }
-    res.json(data);
+    res.status(200).json({ success: true, message: "Books fetched successfully", data: data ? data : "No data found" });
   } catch (error) {
-    res.send("Error while fetching data");
+    res.status(500).json({ success: false, message: "Error while fetching data" });
   }
 };
 
