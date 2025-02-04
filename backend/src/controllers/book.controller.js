@@ -103,15 +103,16 @@ const searchBook = async (req, res) => {
 
 const getBooks = async (req, res) => {
   let { limit } = req.query;
-  if (!limit) limit = 20;
+  limit = limit ? parseInt(limit, 10) : 20;
   try {
     const data = await bookModel.findAll({
       limit,
+      raw: true,
     });
-    console.log(data);
+    // console.log(data);
     for (let d of data) {
       // console.log(d.dataValues);
-      d.dataValues.image = "http://localhost:8000/" + d.dataValues.image;
+      d.image = "http://localhost:8000/" + d.image;
     }
     res.json(data);
   } catch (error) {
