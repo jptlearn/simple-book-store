@@ -5,18 +5,40 @@ import urlConstant from "../constants/url.constant.js";
 
 const addBook = async (req, res) => {
   try {
-    const image = req.file.filename;
     const { name, author, genre, description } = req.body;
-    await bookModel.create({
+    if (!name || !author || !genre || !description) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Please provide all required fields: name, author, genre, description of the book",
+      });
+    }
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "Please upload an image.",
+      });
+    }
+    const newBook = new bookModel({
       name,
       author,
       genre,
       description,
-      image: image,
+      image: req.file.filename,
     });
-    res.json({ success: true, message: "Book added successfully" });
+    const savedBook = await newBook.save();
+
+    res.status(201).json({
+      success: true,
+      message: "Book added successfully",
+      data: savedBook,
+    });
   } catch (error) {
-    console.error("Error while adding book", error);
+    res.status(500).json({
+      success: false,
+      message: "Error while adding book.",
+      error: error.message,
+    });
   }
 };
 
