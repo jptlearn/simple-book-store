@@ -59,7 +59,6 @@ DB_NAME=your_database_name
 DB_USERNAME=your_database_username
 DB_PASSWORD=your_database_password
 DB_HOST=localhost
-
 ```
 
 3. Frontend Setup:
@@ -100,6 +99,7 @@ npm start
 
 ### Backend
 
+```
 backend/
 ├── src/
 │ ├── controllers/
@@ -112,9 +112,11 @@ backend/
 │ ├── routes/
 │ │ └── book.route.js
 │ └── index.js
+```
 
 ### Frontend
 
+```
 frontend/
 ├── public/
 ├── src/
@@ -130,6 +132,7 @@ frontend/
 │ │ └── ListBook.js
 │ ├── App.js
 │ └── index.js
+```
 
 ## Contributing
 
