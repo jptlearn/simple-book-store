@@ -91,7 +91,7 @@ const deleteBook = async (req, res) => {
     },
   });
   if (data) {
-    res.json({ success: true, message: "Book deleted." });
+    res.json({ success: true, message: "Book deleted.", data: data });
   } else {
     res.json({
       success: false,
@@ -117,8 +117,12 @@ const searchBook = async (req, res) => {
           { author: { [Op.like]: `%${q}%` } },
         ],
       },
+      raw: true,
     });
     console.log(data);
+    for (let d of data) {
+      d.image = urlConstant.IMG_PATH_URL + d.image;
+    }
     res.json(data);
   } catch (error) {
     res.send("Error while searching book");
