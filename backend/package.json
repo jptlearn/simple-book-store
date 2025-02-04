@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
@@ -12,7 +15,7 @@
   "author": "jptlearn <jptcode500@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "cloudinary": "^2.5.1",
+    "cloudinary": "1.41.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
