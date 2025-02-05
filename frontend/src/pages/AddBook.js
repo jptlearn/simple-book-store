@@ -76,7 +76,7 @@ const AddBook = () => {
           onChange={handleChange}
         ></textarea>
         <input type="file" name="image" onChange={handleImage} />
-        <input type="submit" value="submit" />
+        <input type="submit" value="submit" style={{ cursor: "pointer" }} />
       </form>
     </div>
   );
