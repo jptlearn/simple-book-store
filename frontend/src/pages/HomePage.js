@@ -123,8 +123,8 @@ const HomePage = () => {
                   width: "250px",
                   objectFit: "contain",
                 }}
-                src={book.image}
-                alt="book"
+                src={book.image.includes('http') ? book.image : `/uploads/${book.image}`}
+                alt={book.name}
               />
               <br />
               {book.name}
