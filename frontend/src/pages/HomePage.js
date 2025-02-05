@@ -7,17 +7,24 @@ const HomePage = () => {
   const [bookList, setBookList] = useState([]); // Initialize with empty array
   const [tempBookList, setTempBookList] = useState([]);
   const [searchText, setSearchText] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     async function fetchBook() {
       try {
+        setIsLoading(true);
+        setError(null);
         const response = await api.get("/book");
-
-        setBookList(response.data.data || []);
-        setTempBookList(response.data.data || []);
+        const books = response.data.data || [];
+        setBookList(books);
+        setTempBookList(books);
       } catch (error) {
         console.error("Error fetching books:", error);
+        setError("Failed to load books. Please try again later.");
         setBookList([]);
+      } finally {
+        setIsLoading(false);
       }
     }
     fetchBook();
@@ -25,9 +32,17 @@ const HomePage = () => {
 
   useEffect(() => {
     async function searchBooks() {
-      const response = await api.get(`/book/search/all?q=${searchText}`);
-      if (response.data) {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const response = await api.get(`/book/search/all?q=${searchText}`);
         setBookList(response.data.data || []);
+      } catch (error) {
+        console.error("Error searching books:", error);
+        setError("Failed to search books. Please try again later.");
+        setBookList([]);
+      } finally {
+        setIsLoading(false);
       }
     }
     if (searchText) searchBooks();
@@ -71,7 +86,15 @@ const HomePage = () => {
           justifyContent: "center",
         }}
       >
-        {bookList.length > 0 ? (
+        {isLoading ? (
+          <div style={{ padding: "20px", textAlign: "center" }}>
+            Loading books...
+          </div>
+        ) : error ? (
+          <div style={{ padding: "20px", textAlign: "center", color: "red" }}>
+            {error}
+          </div>
+        ) : bookList.length > 0 ? (
           bookList.map((book, index) => (
             <div
               onClick={() =>
