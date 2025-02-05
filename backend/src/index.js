@@ -23,7 +23,6 @@ app.get("/", (req, res) => {
   res.send("Backend is working");
 });
 
-app.use(express.static("./public/uploads/"));
 app.use("/book", bookRoutes);
 
 app.listen(process.env.PORT, async () => {

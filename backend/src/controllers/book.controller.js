@@ -1,7 +1,6 @@
 import bookModel from "../models/book.model.js";
 import textConstant from "../constants/text.constant.js";
 import { Op } from "sequelize";
-import urlConstant from "../constants/url.constant.js";
 
 const addBook = async (req, res) => {
   try {
@@ -24,7 +23,7 @@ const addBook = async (req, res) => {
       author,
       genre,
       description,
-      image: req.file.filename,
+      image: process.env.NODE_ENV === 'production' ? req.file.path : req.file.filename,
     });
     const savedBook = await newBook.save();
 
@@ -78,7 +77,6 @@ const updateBook = async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, message: "Error updating book", error: error.message });
   }
-
 };
 
 const deleteBook = async (req, res) => {
@@ -104,7 +102,7 @@ const deleteBook = async (req, res) => {
 
 const searchBook = async (req, res) => {
   const { q } = req.query;
-  const { or } = Op; // Destructure Op for cleaner code
+  const { or } = Op;
   try {
     if (!q) {
       return res.json({
@@ -121,10 +119,6 @@ const searchBook = async (req, res) => {
       },
       raw: true,
     });
-    // console.log(data);
-    for (let d of data) {
-      d.image = urlConstant.IMG_PATH_URL + d.image;
-    }
     res.status(200).json({ success: true, message: "Books fetched successfully", data: data ? data : "No data found" });
   } catch (error) {
     res.status(500).json({ success: false, message: "Error while searching book" });
@@ -139,11 +133,6 @@ const getBooks = async (req, res) => {
       limit,
       raw: true,
     });
-    // console.log(data);
-    for (let d of data) {
-      // console.log(d.dataValues);
-      d.image = urlConstant.IMG_PATH_URL + d.image;
-    }
     res.status(200).json({ success: true, message: "Books fetched successfully", data: data ? data : "No data found" });
   } catch (error) {
     res.status(500).json({ success: false, message: "Error while fetching data" });
